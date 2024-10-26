@@ -87,16 +87,20 @@ def api_edit_profile(request):
         logger.debug('api_edit_profile > Method not allowed')
         return JsonResponse({'status': 'error', 'message': _('Method not allowed')}, status=405)
 
-def get_profile_api(request, user_id):
-    logger.debug("")
-    logger.debug("get_profile_api")
+def get_full_profile(request, user_id):
+    logger.debug("get_full_profile")
     id = int(user_id)
     logger.debug(f"id: {id}")
+    authentif_url = 'https://authentif:9001/api/getUserInfo/' + str(id) + '/'
     try:
+        authentif_response = requests.get(authentif_url, verify=os.getenv("CERTFILE"))
+        authentif_data = authentif_response.json()
         user_obj = Profile.objects.get(user_id=id)
         logger.debug('user_obj recovered')
         data = {
               'user_id': user_obj.user_id,
+              'username': authentif_data['username'],
+              'avatar': '/media/' + authentif_data['avatar_url'],
               'country': user_obj.country,
               'city': user_obj.city,
               'display_name': user_obj.display_name,
@@ -104,6 +108,8 @@ def get_profile_api(request, user_id):
               'played_games': user_obj.played_games,
               'wins': user_obj.wins,
               'defeats': user_obj.defeats,
+              'winrate': 0 if user_obj.played_games == 0 else round(user_obj.wins / user_obj.played_games * 100, 2),
+              'total_score' : user_obj.wins * 50,
             }
         return JsonResponse(data, status=200)
     except Profile.DoesNotExist:
@@ -149,7 +155,34 @@ def get_friends(request, user_id):
     except Exception as e:
         logger.debug(f'get_friends > {str(e)}')
         return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
-    
+
+
+def get_profile_api(request, user_id):
+    logger.debug("")
+    logger.debug("get_profile_api")
+    id = int(user_id)
+    logger.debug(f"id: {id}")
+    try:
+        user_obj = Profile.objects.get(user_id=id)
+        logger.debug('user_obj recovered')
+        data = {
+              'user_id': user_obj.user_id,
+              'country': user_obj.country,
+              'city': user_obj.city,
+              'display_name': user_obj.display_name,
+              'preferred_language': user_obj.preferred_language,
+              'played_games': user_obj.played_games,
+              'wins': user_obj.wins,
+              'defeats': user_obj.defeats,
+            }
+        return JsonResponse(data, status=200)
+    except Profile.DoesNotExist:
+        logger.debug('get_profile > User not found')
+        return JsonResponse({'status': 'error', 'message': _('User not found')}, status=404)
+    except Exception as e:
+        logger.debug(f'get_profile > {str(e)}')
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+
 def get_users_ids(request):
     logger.debug("get_users_ids")
     try:

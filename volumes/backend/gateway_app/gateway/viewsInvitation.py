@@ -158,48 +158,35 @@ def invite_to_play(request, receiver_id):
     return user_response
 
 
-def block_friends(request, friend_id):
+def block_friends(request, user_id):
   logger.debug("")
   logger.debug('block_friends')
-  logger.debug(f"block_friends > user {request.user.id} wants to block {friend_id}")
+  logger.debug(f"block_friends > user {request.user.id} wants to block {user_id}")
 
   if request.method != 'POST':
     return redirect('405')
   
-  # csrf_token = request.COOKIES.get('csrftoken')
-  # headers = {
-  #       'X-CSRFToken': csrf_token,
-  #       'Cookie': f'csrftoken={csrf_token}',
-  #       'Content-Type': 'application/json',
-  #       'Referer': 'https://gateway:8443',
-  #   }
-  
-  # # Check friendship
-  # friendship = check_friendship(int(friend_id), int(request.user.id))
+  csrf_token = request.COOKIES.get('csrftoken')
+  headers = {
+        'X-CSRFToken': csrf_token,
+        'Cookie': f'csrftoken={csrf_token}',
+        'Content-Type': 'application/json',
+        'Referer': 'https://gateway:8443',
+    }
 
-  # if friendship['status'] == 'failure':
-  #   status = 'error'
-  #   message = 'You are not friends with this user'
-  #   form = InviteFriendFormFrontend()
-  #   html = render_to_string('fragments/profile_fragment.html', {'form': form, 'message': message}, request=request)
-  #   user_response = JsonResponse({'html': html, 'status': status, 'message': message})
+  if request.user.id == user_id:
+    status = 'error'
+    message = 'You cannot block yourself'
+    user_response =  JsonResponse({'status': status, 'message': message})
   
-  # elif request.user.id == friend_id:
-  #   status = 'error'
-  #   message = 'You cannot block yourself'
-  #   form.add_error(None, 'You cannot block yourself')
-  #   html = render_to_string('fragments/profile_fragment.html', {'form': form}, request=request)
-  #   user_response =  JsonResponse({'html': html, 'status': status, 'message': message})
-  
-  # else:
-  #   status = 'success'
-  #   message = 'Friend blocked!'
-  #   html = render_to_string('fragments/profile_fragment.html', request=request)
-  #   logger.debug(f"block_friends > friend_id: {friend_id}")
-  #   logger.debug(f"block_friends > user_id: {request.user.id}")
-  #   user_response =  JsonResponse({'html': html, 'status': status, 'message': message, 'user_id': request.user.id, 'friend_id': friend_id}) 
+  else:
+    logger.debug(f"block_friends > user_id: {user_id}")
+    logger.debug(f"block_friends > user_id: {request.user.id}")
+    status = 'success'
+    message = 'Friend blocked!'
+    request = requests.post('https://profileapi:9002/api/blockFriend/' + str(user_id) + '/', headers=headers, verify=os.getenv("CERTFILE"))
 
-  # return user_response
+  return user_response
     
 
   

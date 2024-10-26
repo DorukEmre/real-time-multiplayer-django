@@ -43,6 +43,7 @@ function listenForm(form) {
       console.log(
         'listenForm > data.preferred_language ', data.preferred_language);
       console.log('listenForm > data.message: ', data.message);
+      console.log('listenForm > data.type: ', data.type);
       // console.log('listenForm > data.html: ', data.html);
 
       if (data.status != 'error' && data.type && data.message && !data.html) {
@@ -59,13 +60,14 @@ function listenForm(form) {
         } else if (data.type === 'profile_updated') {
           sessionStorage.setItem('afterProfileUpdate', 'true');
           sessionStorage.setItem('afterProfileUpdateMessage', data.message);
-
         }
 
+        console.log('data.type: ', data.type);
         // Redirect home
         if (data.type !== 'profile_updated' && data.type !== 'invite_sent') {
           window.location.replace('/');
         } else if (data.type === 'profile_updated') {
+          console.log('data.type === profile_updated');
           location.reload();
         }
 

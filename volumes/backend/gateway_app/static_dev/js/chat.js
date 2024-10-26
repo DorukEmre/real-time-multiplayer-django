@@ -74,8 +74,12 @@ function innit_listening() {
 						contactItem.classList.add('selected-contact');
 
 						// Update the avatar and display name
+						const contactAvatarLink = document.getElementById('contactAvatarLink');
+						const contactDisplayNameLink = document.getElementById('contactDisplayNameLink');
+						contactAvatarLink.href = '/friend_profile/' + friend.user_id;
 						contactAvatar.src = friend.avatar;
 						contactDisplayName.textContent = friend.display_name;
+						contactDisplayNameLink.href = '/friend_profile/' + friend.user_id;
 						currentChatId.value = friend.user_id;
 						
 						// Get all the messages between the user and the selected friend

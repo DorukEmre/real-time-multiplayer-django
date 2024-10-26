@@ -17,8 +17,9 @@ urlpatterns = [
 
     # Getter
     path('api/profile/<str:user_id>/', views.get_profile_api, name='profile_api'),
+	path('api/getFullProfile/<str:user_id>/', views.get_full_profile, name='get_full_profile'),
     path('api/getfriends/<str:user_id>/', views.get_friends, name='get_friends'),
-	  path('api/getUsersIds/', views.get_users_ids, name='get_users_ids'),
+	path('api/getUsersIds/', views.get_users_ids, name='get_users_ids'),
 
     # Notifications
     path('api/createnotif/', views.create_notifications, name='create_notifications'),

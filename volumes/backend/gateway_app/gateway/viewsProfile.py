@@ -75,10 +75,11 @@ def get_friend_profile(request, friend_id):
     if request.method != 'GET':
         return redirect('405')
     form = InviteFriendFormFrontend()
-    profile_api_url = 'https://profileapi:9002/api/profile/' + str(friend_id)
+    profile_api_url = 'https://profileapi:9002/api/getFullProfile/' + str(friend_id)
     response = requests.get(profile_api_url, verify=os.getenv("CERTFILE"))
     if response.status_code == 200:
         profile_data = response.json()
+        logger.debug(f"get_friend_profile > profile_data: {profile_data}")
         if request.headers.get('x-requested-with') == 'XMLHttpRequest':
             html = render_to_string('fragments/friend_profile_fragment.html', {'form': form, 'profile_data': profile_data}, request=request)
             return JsonResponse({'html': html, 'status': 'success'})

@@ -47,8 +47,12 @@
 								<!-- Sticky header with contact name and avatar -->
 								<div class="sticky-top bg-dark d-flex justify-content-between align-items-center p-2 rounded-3 " style="z-index: 1; top: 0; background-color: #333;">
 									<div class="d-flex align-items-center">
-										<img id="contactAvatar" src="{% static 'images/default_avatar.png' %}" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 50%; border: 2px solid #fff; margin-right: 1rem;" alt="{% trans "avatar 1" %}">
-										<p id="contactDisplayName" style="color: white; margin: 0;">{% trans "Select a contact" %}</p>
+										<a id="contactAvatarLink" href="#">
+											<img id="contactAvatar" src="{% static 'images/game/cow400.png' %}" style="height: 3rem; width: 3rem; object-fit: cover; border-radius: 50%; border: 2px solid #fff; margin-right: 1rem;" alt="{% trans "avatar 1" %}">
+										</a>
+										<a id="contactDisplayNameLink" href="#">
+											<p id="contactDisplayName" style="color: white; margin: 0;">{% trans "Select a contact" %}</p>
+										</a>
 									</div>
 									<p id="date" class="small mb-0" style="color: white;">23 Jan 2:00 pm</p>
 								</div>
