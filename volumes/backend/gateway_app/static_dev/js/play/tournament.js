@@ -5,11 +5,11 @@ function checkValidInputTournament(p1_name, p2_name, p3_name, p4_name) {
   // Check if the names are different
   if (p1_name === p2_name || p1_name === p3_name || p1_name === p4_name ||
     p2_name === p3_name || p2_name === p4_name || p3_name === p4_name) {
-    console.log(
-       'p1_name: ', p1_name, 'p2_name: ', p2_name, 'p3_name: ', p3_name,
-       'p4_name: ', p4_name);
+    // console.log(
+    //    'p1_name: ', p1_name, 'p2_name: ', p2_name, 'p3_name: ', p3_name,
+    //    'p4_name: ', p4_name);
     let error = 'Names must be unique';
-    console.log('error: ', error);
+    // console.log('error: ', error);
     if (lang === 'fr')
       error = 'Les noms doivent être uniques';
     else if (lang === 'es')
@@ -24,7 +24,7 @@ function checkValidInputTournament(p1_name, p2_name, p3_name, p4_name) {
     // Check if the names are empty or only whitespace
     if (name.length === 0 || name.trim().length === 0) {
       let error = 'Name can\'t be empty';
-      console.log('error: ', error);
+      // console.log('error: ', error);
       if (lang === 'fr')
         error = 'Le nom ne peut pas être vide';
       else if (lang === 'es')
@@ -37,7 +37,7 @@ function checkValidInputTournament(p1_name, p2_name, p3_name, p4_name) {
     // Check name length <= 16
     if (name.length > 16) {
       let error = 'Name must be 16 characters or less';
-      console.log('error: ', error);
+      // console.log('error: ', error);
       if (lang === 'fr')
         error = 'Le nom doit comporter 16 caractères ou moins';
       else if (lang === 'es')
@@ -50,7 +50,7 @@ function checkValidInputTournament(p1_name, p2_name, p3_name, p4_name) {
     // Check if names are alphanumerical
     if (!/^[a-zA-Z0-9_]+$/.test(name)) {
       let error = 'Names must be alphanumerical';
-      console.log('error: ', error);
+      // console.log('error: ', error);
       if (lang === 'fr')
         error = 'Les noms doivent être alphanumériques';
       else if (lang === 'es')
@@ -65,7 +65,7 @@ function checkValidInputTournament(p1_name, p2_name, p3_name, p4_name) {
 }
 
 async function playTournament() {
-  console.log('playTournament');
+  // console.log('playTournament');
   // gameMode: 'local'
   // gameType: 'pong' or cows
   // gameRound: 'single', 'Semi-Final 1', 'Semi-Final 2', 'Final'
@@ -78,7 +78,7 @@ async function playTournament() {
   const gameType =
     document.querySelector('input[name="chosenGame-tnmt"]:checked').id;
 
-  console.log(gameType, p1_name, p2_name, p3_name, p4_name);
+  // console.log(gameType, p1_name, p2_name, p3_name, p4_name);
 
   // check names are valid
   if (!checkValidInputTournament(p1_name, p2_name, p3_name, p4_name)) return;

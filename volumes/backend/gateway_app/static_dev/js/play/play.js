@@ -14,7 +14,7 @@ function checkValidInputGame(gameMode, gameType, p1_name, p2_name) {
     (gameMode !== 'local' && gameMode !== 'remote') ||
     (gameType !== 'pong' && gameType !== 'cows')) {
     let error = 'Invalid selection';
-    console.log('gameMode: ', gameMode, ', gameType: ', gameType);
+    // console.log('gameMode: ', gameMode, ', gameType: ', gameType);
     if (lang === 'fr')
       error = 'Sélection invalide';
     else if (lang === 'es')
@@ -83,7 +83,7 @@ async function checkNameAlreadyExists(name) {
 
   let path = window.location.pathname;
   let url = '';
-  console.log('path: ', path);
+  // console.log('path: ', path);
   if (path === '/play/') {
     url = 'checkNameExists/';
   } else if (path === '/play') {
@@ -103,13 +103,13 @@ async function checkNameAlreadyExists(name) {
     });
 
     const response = await fetch(request);
-    console.log(response);
+    // console.log(response);
 
     if (!response.ok) {
       throw new Error(`HTTP error - status: ${response.status}`);
     }
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
 
     if (data.status === 'failure') {
       let lang = getCookie('django_language');
@@ -204,7 +204,7 @@ async function playGameInvite(gameMode, gameType, p1_name, invite_data) {
   // gameRound: 'single'
   const gameRound = 'single';
 
-  console.log('playGameInvite > invite_data: ', invite_data, '. This user is p1_name: ', p1_name, ', gameMode: ', gameMode, ', gameType: ', gameType);
+  // console.log('playGameInvite > invite_data: ', invite_data, '. This user is p1_name: ', p1_name, ', gameMode: ', gameMode, ', gameType: ', gameType);
 
   startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, invite_data);
 }

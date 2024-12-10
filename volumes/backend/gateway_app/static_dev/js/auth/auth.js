@@ -5,24 +5,24 @@ async function updateUserID() {
     const data = await response.json();
     if (data.user_id) {
       g_user_id = data.user_id;
-      console.log('Updated global user ID:', g_user_id);
+      // console.log('Updated global user ID:', g_user_id);
     } else {
-      console.error('Failed to retrieve user ID');
+      // console.error('Failed to retrieve user ID');
       g_user_id = null;
     }
   } catch (error) {
-    console.error('Error fetching user ID:', error);
+    // console.error('Error fetching user ID:', error);
     g_user_id = null;
   }
 }
 
 async function handleRefresh(type) {
-  console.warn('handleRefresh called by:\n', new Error().stack.split('\n')[2].trim());
+  // console.warn('handleRefresh called by:\n', new Error().stack.split('\n')[2].trim());
   // First GET request for the main content
-  console.log('handleRefresh > type:', type);
+  // console.log('handleRefresh > type:', type);
 
   if (type != 'language') {
-    console.log('handleRefresh > main content');
+    // console.log('handleRefresh > main content');
     await fetch(`/home/?status=success&message=Logged%20in%20successfully&type=main`, {
       headers: {
         'X-CSRFToken': getCookie('csrftoken'),
@@ -43,7 +43,7 @@ async function handleRefresh(type) {
 
 
   // Second GET request for the header content
-  console.log('handleRefresh > header');
+  // console.log('handleRefresh > header');
   await fetch(`/home/?status=success&message=Logged%20in%20successfully&type=header`, {
     headers: {
       'X-CSRFToken': getCookie('csrftoken'),
@@ -60,9 +60,9 @@ async function handleRefresh(type) {
           g_user_id = 0;
         }
         else {
-          console.log(data.user_id)
+          // console.log(data.user_id)
           g_user_id = data.user_id;
-          console.log(g_user_id)
+          // console.log(g_user_id)
         }
       }
     })
@@ -73,7 +73,7 @@ async function handleRefresh(type) {
   let chatPresent = false;
   // Remove chat on logout and language change
   if (type == 'logout' || type == 'language' || type == 'profile_update') {
-    console.log('handleRefresh > remove chat');
+    // console.log('handleRefresh > remove chat');
     // remove chat element
     const chatSection = document.getElementById('chatSection');
     if (chatSection) {
@@ -90,7 +90,7 @@ async function handleRefresh(type) {
 
   // Add chat
   if (type == 'login' || type == 'refresh' || type == 'signup' || chatPresent) {
-    console.log('handleRefresh > add chat');
+    // console.log('handleRefresh > add chat');
     // GET request for chat section
     fetch(`/home/?status=success&message=Logged%20in%20successfully&type=chat`, {
       headers: {
@@ -102,7 +102,7 @@ async function handleRefresh(type) {
       .then(response => response.json())
       .then(data => {
         if (data.status === 'success') {
-          console.log('Adding chat section');
+          // console.log('Adding chat section');
           document.querySelector('body').innerHTML += data.html;
 
           // Initialise the chat modal
@@ -113,7 +113,7 @@ async function handleRefresh(type) {
 
           if (type == 'profile_update') {
             let lang = getCookie('django_language');
-            console.log('handleRefresh > lang:', lang);
+            // console.log('handleRefresh > lang:', lang);
             let message = 'Profile updated';
             if (lang === 'fr')
               message = 'Profil mis à jour';
@@ -141,7 +141,7 @@ async function handleRefresh(type) {
   }
 
   if (type == 'profile_update' || type == 'login' || type == 'refresh' || type == 'signup' || chatPresent) {
-    console.warn('handleRefresh > updating notifications');
+    // console.warn('handleRefresh > updating notifications');
     await fetchTranslations();
     if (mainRoomSocket && mainRoomSocket.readyState != WebSocket.OPEN) {
       connectMainRoomSocket();
@@ -320,7 +320,7 @@ async function refreshToken() {
 
     // check for the message variable in the response body if its == 'Expired Token refreshed'
     if (data.message === 'Expired Token refreshed') {
-      console.log("Expired Token refreshed");
+      // console.log("Expired Token refreshed");
       await sleep(300);
       await handleRefresh("refresh");
     }
@@ -328,7 +328,7 @@ async function refreshToken() {
     // Assuming the new token is in data.token
     return data.token;
   } catch (error) {
-    console.error("Error refreshing token:", error);
+    // console.error("Error refreshing token:", error);
     throw error;
   }
 }

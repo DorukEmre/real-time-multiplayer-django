@@ -15,11 +15,11 @@ async function checkIfImBlocked(friendId) {
       throw new Error('Error fetching friend profile');
     }
     const data = await response.json();
-    console.log('checkIfImBlocked > data:', data);
-    console.log('checkIfImBlocked > data.im_blocked:', data.im_blocked);
+    // console.log('checkIfImBlocked > data:', data);
+    // console.log('checkIfImBlocked > data.im_blocked:', data.im_blocked);
     return data.im_blocked;
   } catch (error) {
-    console.error('Error checking if blocked:', error);
+    // console.error('Error checking if blocked:', error);
     return false;
   }
 }
@@ -41,22 +41,22 @@ async function checkIfBlocked(friendId) {
       throw new Error('Error fetching friend profile');
     }
     const data = await response.json();
-    console.log('checkIfBlocked > data:', data);
-    console.log('checkIfBlocked > data.is_blocked:', data.is_blocked);
+    // console.log('checkIfBlocked > data:', data);
+    // console.log('checkIfBlocked > data.is_blocked:', data.is_blocked);
     return data.is_blocked;
   } catch (error) {
-    console.error('Error checking if blocked:', error);
+    // console.error('Error checking if blocked:', error);
     return false;
   }
 }
 
 async function blockFriend(friendId) {
-  console.log('blockFriend > friendId:', friendId);
+  // console.log('blockFriend > friendId:', friendId);
   const blockSwitch = document.getElementById(`blockSwitch-${friendId}`);
-  console.log('blockFriend > blockSwitch:', blockSwitch);
+  // console.log('blockFriend > blockSwitch:', blockSwitch);
 
   const checked = blockSwitch.checked;
-  console.log('blockFriend > checked:', checked);
+  // console.log('blockFriend > checked:', checked);
 
   let url;
   if (checked) {
@@ -83,7 +83,7 @@ async function blockFriend(friendId) {
       throw new Error('HTTP error, status = ' + response.status);
     }
     const data = await response.json();
-    console.log('blockFriend > data:', data);
+    // console.log('blockFriend > data:', data);
 
     if (data.status === 'success') {
       // Reload my_friends page if on it
@@ -113,7 +113,7 @@ async function blockFriend(friendId) {
 }
 
 function sendBlockInfoToSocket(sender_id, receiver_id, is_blocked) {
-  console.log('is_blocked:', is_blocked);
+  // console.log('is_blocked:', is_blocked);
   type = "";
   if (is_blocked) {
     type = 'block';
@@ -126,7 +126,7 @@ function sendBlockInfoToSocket(sender_id, receiver_id, is_blocked) {
     receiver_id: receiver_id,
     type: type
   }
-  console.log('sendBlockInfoToSocket > data:', data);
+  // console.log('sendBlockInfoToSocket > data:', data);
   mainRoomSocket.send(JSON.stringify(data));
 }
 

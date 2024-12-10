@@ -251,7 +251,7 @@ function setupNavbarNavigateEventListeners(socket) {
   // Define the event listener for navigation
   function closeSocketOnNavigateClick() {
     if (socket) {
-      console.log("Closing WebSocket due to navigation.");
+      // console.log("Closing WebSocket due to navigation.");
       socket.close();
       socket = null;
 
@@ -287,13 +287,13 @@ function setupNavbarNavigateEventListeners(socket) {
 function setupChatNavigateEventListeners(socket) {
   const contactAvatarLink = document.querySelector("#contactAvatarLink");
   const contactDisplayNameLink = document.querySelector("#contactDisplayNameLink");
-  console.log("contactAvatarLink", contactAvatarLink);
-  console.log("contactDisplayNameLink", contactDisplayNameLink);
+  // console.log("contactAvatarLink", contactAvatarLink);
+  // console.log("contactDisplayNameLink", contactDisplayNameLink);
 
   // Define the event listener for navigation
   function closeSocketOnNavigateClick() {
     if (socket) {
-      console.log("Closing WebSocket due to navigation.");
+      // console.log("Closing WebSocket due to navigation.");
       socket.close();
       socket = null;
 

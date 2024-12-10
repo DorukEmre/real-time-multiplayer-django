@@ -6,7 +6,7 @@ async function init_listening() {
   let friendsData = [];
   const userID = g_user_id;
   if (userID === 0 || userID === '0' || userID === '' || userID === undefined || userID === null || userID === 'None' || userID === '[object HTMLInputElement]') {
-    console.error('Client is not logged in, cannot use websocket');
+    // console.error('Client is not logged in, cannot use websocket');
     return;
   }
   const chatButton = document.getElementById('chatButton');
@@ -16,13 +16,13 @@ async function init_listening() {
 
   if (chatModal) {
     chatModal.addEventListener('hidden.bs.modal', () => {
-      console.log('Chat modal is closed');
+      // console.log('Chat modal is closed');
       const currentChatId = document.getElementById('currentChatId');
       currentChatId.value = '';
     });
   }
 
-  console.log('chat.js > chatButton:', chatButton);
+  // console.log('chat.js > chatButton:', chatButton);
   // Listen for the chat button click
   chatButton?.addEventListener('click', async () => {
     friendsData = await getFriendsData();
@@ -35,16 +35,13 @@ async function init_listening() {
     const blockSwitch = document.querySelector('input[data-user-id]');
 
     if (!selectedContact) {
-      // messageInput.placeholder = 'Select a contact to send a message';
-      console.log('No contact selected');
+      // console.log('No contact selected');
       return;
     } else if (!messageInput.value) {
-      // messageInput.placeholder = 'Type a message to send';
-      console.log('No message to send');
+      // console.log('No message to send');
       return;
     } else if (blockSwitch.checked) {
-      // messageInput.placeholder = 'You cannot send messages to blocked users';
-      console.log('Cannot send messages to blocked users');
+      // console.log('Cannot send messages to blocked users');
       return;
     } else if (messageInput.value.length > 1000) {
       let lang = getCookie('django_language');
@@ -55,7 +52,6 @@ async function init_listening() {
         error = 'Mensaje demasiado largo, máximo 1000';
       messageInput.value = '';
       alert(error);
-      console.log('Message too long');
       return;
     }
 
@@ -78,7 +74,7 @@ async function init_listening() {
 
     addSentChatMessage(message);
     sendMessagesBySocket(data, mainRoomSocket);
-    console.log('data:', data);
+    // console.log('data:', data);
     messageInput.value = '';
   }
 
@@ -107,7 +103,6 @@ async function checkUnreadMessages() {
 function handleChatMessages(data) {
   if (data.subtype === 'init_listening') {
     init_listening();
-    console.log('chat listen init');
   }
   else if (data.subtype === 'chat_message') {
     const currentChatId = document.getElementById('currentChatId');
@@ -119,7 +114,7 @@ function handleChatMessages(data) {
     checkUnreadMessages();
   }
   else if (data.subtype === 'unread_messages') {
-    console.log('parseSocketMessage > data.subtype:', data.subtype);
+    // console.log('parseSocketMessage > data.subtype:', data.subtype);
     addUnreadMessages(data);
   } else if (data.subtype === 'load_conversation') {
     loadConversation(data);
@@ -130,7 +125,7 @@ function handleChatMessages(data) {
 
 
 function loadConversation(data) {
-  console.log('loadConversation > data:', data);
+  // console.log('loadConversation > data:', data);
   const conversation = document.getElementById('conversation');
   conversation.innerHTML = '';
   data.conversation.forEach(message => {
@@ -168,19 +163,19 @@ function addRecvChatMessage(data) {
 
   messageElement.appendChild(messageContent);
   chatMessages.appendChild(messageElement);
-  console.log('addRecvChatMessage > data:', data);
+  // console.log('addRecvChatMessage > data:', data);
 }
 
 
 function addUnreadMessages(data) {
-  console.log('addUnreadMessages > data:', data);
+  // console.log('addUnreadMessages > data:', data);
   const unreadChatsCount = document.getElementById('unreadChatscount');
   if (unreadChatsCount)
     unreadChatsCount.textContent = data.unread_messages_count;
 }
 
 function markConversationRead(sender_id, receiver_id) {
-  console.log('markConversationRead > sender_id:', sender_id, 'receiver_id:', receiver_id);
+  // console.log('markConversationRead > sender_id:', sender_id, 'receiver_id:', receiver_id);
   const unreadMessagesData = {
     type: 'chat',
     subtype: 'mark_conversation_read',
@@ -222,7 +217,7 @@ async function getFriendsData() {
   try {
     const response = await fetch(request);
     const data = await response.json();
-    console.log('data:', data);
+    // console.log('data:', data);
     return data.friends;
   } catch (error) {
     console.error('Error fetching friends:', error);
@@ -233,9 +228,9 @@ async function getFriendsData() {
 
 async function displayFriendsInChat(friendsData) {
   // Displays who called this function
-  console.log('displayFriendsInChat > friendsData: ', friendsData);
-  const stackTrace = new Error().stack;
-  console.log('displayFriendsInChat > call stack:', stackTrace);
+  // console.log('displayFriendsInChat > friendsData: ', friendsData);
+  // const stackTrace = new Error().stack;
+  // console.log('displayFriendsInChat > call stack:', stackTrace);
 
   const currentChatId = document.getElementById('currentChatId');
   const blockSwitchContainer = document.getElementById('blockSwitchContainer');
@@ -364,7 +359,7 @@ async function displayFriendsInChat(friendsData) {
           // update gameInvitePopup with friend.user_id
           const gameInvitePopup = document.getElementById('gameInvitePopup');
           const gameInviteForm = gameInvitePopup.querySelector('form');
-          console.log('gameInviteForm:', gameInviteForm);
+          // console.log('gameInviteForm:', gameInviteForm);
           gameInviteForm.id = `chat-invite-play-${friend.user_id}`;
           gameInviteForm.action = `/invite_to_play/${friend.user_id}/`;
           const newGameInviteForm = gameInviteForm.cloneNode(true);
@@ -381,7 +376,7 @@ async function displayFriendsInChat(friendsData) {
           const newBlockSwitch = blockSwitch.cloneNode(true);
           blockSwitchDiv.replaceChild(newBlockSwitch, blockSwitch);
           checkIfBlocked(friend.user_id).then((isBlocked) => {
-            console.log('chat checkIfBlocked > isBlocked:', isBlocked);
+            // console.log('chat checkIfBlocked > isBlocked:', isBlocked);
             newBlockSwitch.checked = isBlocked;
             if (isBlocked) {
               document.getElementById('contactGameInviteContainer').style.display = 'none';
@@ -397,7 +392,7 @@ async function displayFriendsInChat(friendsData) {
             //   : 'Type a message to send';
           });
           newBlockSwitch.addEventListener('change', function () {
-            console.log('blockSwitch changed');
+            // console.log('blockSwitch changed');
             sendBlockInfoToSocket(userID, friend.user_id, newBlockSwitch.checked);
             blockFriend(friend.user_id);
             // Send info to the websocket

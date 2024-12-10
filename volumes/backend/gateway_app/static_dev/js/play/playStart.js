@@ -12,7 +12,7 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
   if (calcGameSocket === undefined) return;
 
   calcGameSocket.onopen = function (e) {
-    console.log('startNewGame > .onopen, connection opened.');
+    // console.log('startNewGame > .onopen, connection opened.');
 
     // Set up event listeners on navbar items to close connection on navigate
     setupNavbarNavigateEventListeners(calcGameSocket);
@@ -56,13 +56,13 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
 
     } else if (data.type === 'already_in_game') {  // while finding an opponent
       // in remote
-      console.log('startNewGame > .onmessage already_in_game:', data.message);
+      // console.log('startNewGame > .onmessage already_in_game:', data.message);
       // Load html waiting room
       document.querySelector('main').innerHTML = data.html;
       announceGame(data.title, data.message);
 
     } else if (data.type === 'blocked_user') {
-      console.warn('startNewGame > .onmessage blocked_user:', data.type);
+      // console.warn('startNewGame > .onmessage blocked_user:', data.type);
 
       document.querySelector('main').innerHTML = data.html;
       announceGame(data.title, data.message);
@@ -70,13 +70,13 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
 
     } else if (data.type === 'waiting_room') {  // while finding an opponent
       // in remote
-      console.log('startNewGame > .onmessage waiting_room:', data.message);
+      // console.log('startNewGame > .onmessage waiting_room:', data.message);
       // Load html waiting room
       document.querySelector('main').innerHTML = data.html;
 
     }  // displays Start button in local and checkboxes in remote
     else if (data.type === 'game_start') {
-      console.log('startNewGame > .onmessage game_start:', data.message);
+      // console.log('startNewGame > .onmessage game_start:', data.message);
       // Load start game page
       document.querySelector('main').innerHTML = data.html;
       if (gameMode === 'local') {
@@ -92,25 +92,25 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
 
     }  // updates oppenent's ready checkbox in remote
     else if (data.type === 'opponent_ready') {
-      console.log('startNewGame > .onmessage opponent_ready:', data.message);
+      // console.log('startNewGame > .onmessage opponent_ready:', data.message);
       updateOpponentReadyCheckBoxes(data.opponent)
 
     } else if (data.type === 'game_countdown') {
-      console.log('startNewGame > .onmessage game_countdown:', data.message);
+      // console.log('startNewGame > .onmessage game_countdown:', data.message);
       if (data.countdown === 3) displayCanvasElement(cfg);
       showCountdown(cfg, data.game_state, data.countdown);
 
     } else if (data.type === 'game_update') {
-      console.log('startNewGame > .onmessage game_update:', data.message);
+      // console.log('startNewGame > .onmessage game_update:', data.message);
       if (gameType === 'pong')
         renderPongGame(cfg, data.game_state);
       else if (gameType === 'cows')
         renderCowsGame(cfg, data.game_state);
 
     } else if (data.type === 'game_end') {
-      console.log('startNewGame > .onmessage game_end:', data.message);
-      console.log('game_result:', data.game_result);
-      console.log('game_end data:', data);
+      // console.log('startNewGame > .onmessage game_end:', data.message);
+      // console.log('game_result:', data.game_result);
+      // console.log('game_end data:', data);
 
       document.querySelector('#game-container').innerHTML = data.html;
       document.querySelector('#game-container').classList.replace('justify-content-around', 'justify-content-center');
@@ -122,9 +122,9 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
       calcGameSocket.close();
 
     } else if (data.type === 'disconnection') {
-      console.log('startNewGame > .onmessage disconnection:', data.message);
-      console.log('game_result:', data.game_result);
-      console.log('disconnection data:', data);
+      // console.log('startNewGame > .onmessage disconnection:', data.message);
+      // console.log('game_result:', data.game_result);
+      // console.log('disconnection data:', data);
 
       document.querySelector('#game-container').innerHTML = data.html;
       document.querySelector('#game-container').classList.replace('justify-content-around', 'justify-content-center');
@@ -136,8 +136,7 @@ async function startNewGame(gameMode, gameType, gameRound, p1_name, p2_name, inv
 
       calcGameSocket.close();
 
-      // } else {
-      console.log('startNewGame > .onmessage data:', data);
+      // console.log('startNewGame > .onmessage data:', data);
     }
   };
 
