@@ -7,7 +7,7 @@ urlpatterns = [
     path('api/signup/', views.api_signup, name='api_signup'),
     path('api/checkUsernameExists/', views.api_check_username_exists, name='api_check_username_exists'),
     path('api/editprofile/', views.api_edit_profile, name='api_edit_profile'),
-    path('api/oauth/', views.oauth, name='oauth'),
+
     path('api/enable2FA/', views.enable2FA, name='enable2FA'),
     path('api/disable2FA/', views.disable2FA, name='disable2FA'),
     path('api/confirm2FA/', views.confirmEnable2FA, name='confirm2FA'),

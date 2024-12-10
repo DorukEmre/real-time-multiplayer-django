@@ -29,14 +29,6 @@
       <button type="submit" class="btn btn-secondary w-100 mb-3">{% trans "Log In" %}</button>
     </form>
 
-	<div id="config42login" hidden="true"
-	data-client-id="{{ CLIENT_ID }}" 
-	data-redirect-uri="{{ REDIRECT_URI }}"
-	oauth-view-url="{% url 'oauth' %}"></div>
-
-    <!-- Login with 42 button -->
-    <button id="login-42-btn" class="btn btn-primary w-100 mb-3" onclick="loginButton42()" style="display: none;">{% trans "Login with 42" %}</button>
-
     <!-- Link to Sign Up -->
     <p class="mt-4"><a href="{% url 'signup' %}" class="link-secondary">{% trans "Don't have an account?" %}</a></p>
 

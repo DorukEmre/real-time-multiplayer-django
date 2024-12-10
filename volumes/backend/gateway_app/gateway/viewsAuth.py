@@ -72,9 +72,9 @@ def view_login(request):
 def get_login(request):
     form = LogInFormFrontend()
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('fragments/login_fragment.html', {'form': form, 'CLIENT_ID': settings.CLIENT_ID, 'REDIRECT_URI': settings.REDIRECT_URI}, request=request)
+        html = render_to_string('fragments/login_fragment.html', {'form': form}, request=request)
         return JsonResponse({'html': html})
-    return render(request, 'partials/login.html', {'form': form, 'CLIENT_ID': settings.CLIENT_ID, 'REDIRECT_URI': settings.REDIRECT_URI})
+    return render(request, 'partials/login.html', {'form': form})
    
 User = get_user_model()
 
@@ -103,7 +103,7 @@ def post_login(request):
     if not form.is_valid():
         message = _("Invalid form data")
         form.add_error(None, message)
-        html = render_to_string('fragments/login_fragment.html', {'form': form, 'CLIENT_ID': settings.CLIENT_ID, 'REDIRECT_URI': settings.REDIRECT_URI}, request=request)
+        html = render_to_string('fragments/login_fragment.html', {'form': form}, request=request)
         return JsonResponse({'html': html, 'status': 'error', 'message': message}, status=400)
     
     # Forward the request to the auth service
@@ -146,7 +146,7 @@ def post_login(request):
         form = LogInFormFrontend(data)
         form.add_error(None, message)
 
-        html = render_to_string('fragments/login_fragment.html', {'form': form, 'CLIENT_ID': settings.CLIENT_ID, 'REDIRECT_URI': settings.REDIRECT_URI}, request=request)
+        html = render_to_string('fragments/login_fragment.html', {'form': form}, request=request)
         return JsonResponse({'html': html, 'status': status, 'message': message}, status=response.status_code)
 
 
@@ -222,85 +222,6 @@ def post_signup(request):
         html = render_to_string('fragments/signup_fragment.html', {'form': form}, request=request)
         return JsonResponse({'html': html, 'status': 'error', 'message': message}, status=400)
 
-
-@csrf_exempt
-def oauth(request):
-    authentif_url = 'https://authentif:9001/api/oauth/'
-    
-    if request.method != 'POST':
-        return redirect('405')
-
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return HttpResponse("Invalid JSON data", status=400)
-
-    # Get the 'code' and 'state' parameters from the parsed JSON data
-    auth_code = data.get('code')
-
-    # TODO - compare the states for preventing cross-site attacks
-    state = data.get('state')
-    if not auth_code:
-        return HttpResponse("Authorization code is missing", status=400)
-
-    try:
-        # Set up the JSON data to send in the POST request to the external service
-        payload = json.dumps({'code': auth_code})  # Convert the data to a JSON string
-        csrf_token = request.COOKIES.get('csrftoken')
-        jwt_token = request.COOKIES.get('jwt_token')
-        django_language = getDjangoLanguageCookie(request)
-        headers = {
-          'X-CSRFToken': csrf_token,
-          'X-Language': django_language,
-          'Cookie': f'csrftoken={csrf_token}',
-          'Content-Type': 'application/json',
-          'Referer': 'https://gateway:8443',
-          'Authorization': f'Bearer {jwt_token}',
-        }
-        # Make the POST request to the external authentif service
-        response = requests.post(authentif_url, cookies=request.COOKIES,data=payload, headers=headers, verify=os.getenv("CERTFILE"))       
-        response_data = response.json() if response.status_code == 200 else {}
-        
-        # Create a base JsonResponse with status and message
-        json_response_data = {
-            'status': 'success',
-            'message': response_data.get("message", _("No message provided")),
-            'user_id': response_data.get("user_id")
-        }
-
-        # Merge response_data into the JsonResponse data
-        json_response_data.update(response_data)
-
-        # Create JsonResponse
-        json_response = JsonResponse(json_response_data)
-
-        # Set cookies from the response into the JsonResponse
-        for cookie_name, cookie_value in response.cookies.items():
-            json_response.set_cookie(cookie_name, cookie_value)
-        
-        # Set headers from response
-        for header_name, header_value in response.headers.items():
-            # Avoid overwriting 'Content-Type' or 'Content-Length' as they are set by JsonResponse
-            if header_name.lower() not in ['content-type', 'content-length']:
-                json_response[header_name] = header_value
-        
-        if response.cookies.get('django_language') == None:
-            profile_data = get_profileapi_variables(response=response)
-            preferred_language = profile_data.get('preferred_language')
-            json_response.set_cookie('django_language', preferred_language, httponly=False, secure=True, samesite='Lax')
-        return json_response
-
-    except requests.exceptions.RequestException as e:
-        # Handle external request failure gracefully
-        return JsonResponse({'status': 'error', 'message': _('Failed to login with 42')})
-
-
-def oauth_callback(request):
-    """
-    Renders the OAuth callback page where the popup window will extract the 'code'
-    and 'state' from the URL, then send it back to the parent window using postMessage.
-    """
-    return render(request, 'fragments/oauth_callback.html')
 
 @login_required
 def enable2FA_redir(request):

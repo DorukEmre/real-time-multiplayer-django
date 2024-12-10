@@ -22,10 +22,6 @@ APPEND_SLASH = True
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-CLIENT_ID = os.environ.get('CLIENT_ID')
-CLIENT_SECRET = os.environ.get('CLIENT_SECRET')
-REDIRECT_URI = os.environ.get('REDIRECT_URI')
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
@@ -240,7 +236,6 @@ CHANNEL_LAYERS = {
 # SSL - HTTPS - Security
 
 # Defines a set of host/domain names that Django will accept requests from
-#ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'calcgame', 'gateway', 'authentif', 'profileapi', 'play']
 ALLOWED_HOSTS = [ 'localhost', '127.0.0.1', f'{os.getenv("ACTUALHOSTNAME")}', 'gateway', 'authentif', 'profileapi', 'play', 'calcgame'] # Removing the containers names from host breaks communication between containers
 
 # Redirect all HTTP traffic to HTTPS

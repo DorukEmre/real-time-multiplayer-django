@@ -1,11 +1,8 @@
-from django.contrib import admin
-from django.urls import path #, re_path
+from django.urls import path
 from gateway import views, viewsAuth, viewsErrors, viewsProfile, viewsPlay, viewsInvitation
 from django.conf.urls.static import static
 from django.conf import settings
-from django.conf.urls.i18n import i18n_patterns
 from django.urls import path, include
-from django.conf.urls import handler404
 
 handler404 = 'gateway.viewsErrors.get_404'
 
@@ -23,16 +20,15 @@ urlpatterns = [
     path('signup/', viewsAuth.view_signup, name='signup'),
     path('login/', viewsAuth.view_login, name='login'),
     path('logout/', viewsAuth.get_logout, name='logout'),
-    path('oauth', viewsAuth.oauth, name='oauth'),
-    path('oauth_callback', viewsAuth.oauth_callback, name='oauth_callback'),
+
     path('enable2FA/', viewsAuth.enable2FA_redir, name='enable2FA'),
     path('disable2FA/', viewsAuth.disable2FA_redir, name='disable2FA'),
     path('confirm2FA/', viewsAuth.confirm2FA_redir, name='confirm2FA'),
     path('verify2FA/<int:user_id>/', viewsAuth.verify2FA_redir, name='verify2FA'),
     # api refresh token
     path('api/refresh-token/', viewsAuth.refresh_token, name='refresh_token'),
-	#api get userID
-	path('api/getUserID/', viewsAuth.get_user_id, name='get_user_id'),
+    #api get userID
+    path('api/getUserID/', viewsAuth.get_user_id, name='get_user_id'),
 
     # profile api
     path('profile/', viewsProfile.get_profile, name='profile'),

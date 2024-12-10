@@ -1,7 +1,3 @@
-// TODO -- It doesnt work I think...
-function deleteCookie(name) {
-  document.cookie = name + '=; Max-Age=-99999999; path=/;';
-}
 
 async function updateUserID() {
   try {
@@ -93,7 +89,7 @@ async function handleRefresh(type) {
   }
 
   // Add chat
-  if (type == 'login' || type == 'refresh' || type == 'oauth' || type == 'signup' || chatPresent) {
+  if (type == 'login' || type == 'refresh' || type == 'signup' || chatPresent) {
     console.log('handleRefresh > add chat');
     // GET request for chat section
     fetch(`/home/?status=success&message=Logged%20in%20successfully&type=chat`, {
@@ -144,7 +140,7 @@ async function handleRefresh(type) {
     window.history.pushState({}, '', '/');
   }
 
-  if (type == 'profile_update' || type == 'login' || type == 'refresh' || type == 'oauth' || type == 'signup' || chatPresent) {
+  if (type == 'profile_update' || type == 'login' || type == 'refresh' || type == 'signup' || chatPresent) {
     console.warn('handleRefresh > updating notifications');
     await fetchTranslations();
     if (mainRoomSocket && mainRoomSocket.readyState != WebSocket.OPEN) {
@@ -157,69 +153,10 @@ async function handleRefresh(type) {
 }
 
 
-// Function to handle OAuth code once available
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function handleOAuthCode(oauth_callback_url) {
-  const oauthCode = getCookie('oauth_code');
-  if (oauthCode) {
-    console.log("OAuth code found in cookie:", oauthCode);
-    // Delete the OAuth code cookie after retrieving it
-    deleteCookie('oauth_code');
-
-    try {
-      // Send the code to the server to exchange for an access token
-      const response = await fetch(oauth_callback_url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie('csrftoken')
-        },
-        body: JSON.stringify({ code: oauthCode })
-      });
-
-      if (response.ok) {
-        console.log("OAuth authentication successful");
-        refreshToken();
-        await sleep(500);
-        await handleRefresh("oauth");
-      } else {
-        console.error("OAuth authentication failed");
-      }
-    } catch (error) {
-      console.error("Error during OAuth authentication:", error);
-    }
-  }
-}
-
-// When the user clicks the "Login with 42" button
-function loginButton42() {
-  const configElement = document.getElementById('config42login');
-  const CLIENT_ID = configElement.getAttribute('data-client-id');
-  const REDIRECT_URI = configElement.getAttribute('data-redirect-uri');
-  const oauth_callback_url = configElement.getAttribute('oauth-view-url');
-  const authUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&response_type=code&scope=public`;
-  const width = 600;
-  const height = 600;
-  const left = (window.innerWidth / 2) - (width / 2);
-  const top = (window.innerHeight / 2) - (height / 2);
-  const authWindow = window.open(authUrl, "42OAuthLogin", `width=${width},height=${height},top=${top},left=${left},menubar=no,toolbar=no,location=no,status=no,scrollbars=no,resizable=no`);
-
-  // Polling for OAuth code every second after the popup is opened
-  const intervalId = setInterval(function () {
-    // Check for the OAuth code in cookies
-    const oauthCode = getCookie('oauth_code');
-    if (oauthCode) {
-      clearInterval(intervalId); // Stop polling once we get the OAuth code
-      authWindow.close(); // Close the popup
-
-      // Handle the OAuth code (send to server, etc.)
-      handleOAuthCode(oauth_callback_url);
-    }
-  }, 1000); // Check every 1 second
-};
 
 function enable2FA() {
   fetch('/enable2FA/', {
