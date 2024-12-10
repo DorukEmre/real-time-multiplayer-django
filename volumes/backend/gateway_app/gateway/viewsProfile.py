@@ -110,24 +110,6 @@ def get_friend_profile(request, friend_id):
         return JsonResponse({'html': html, 'status': 'success', 'is_blocked': is_blocked, 'im_blocked': im_blocked})
     return render(request, 'partials/friend_profile.html', context)
 
-@login_required
-def get_match_history(request, username):
-    if request.method != 'GET':
-        return redirect('405')
-    try:
-       user_id = User.objects.get(username=username).id
-    except:
-        return JsonResponse({'status': 'error', 'message': 'Error retrieving match history of a non-existing user'})
-    get_history_url = 'https://play:9003/api/getGames/' + str(user_id) + '/'
-    response = requests.get(get_history_url, verify=os.getenv("CERTFILE"))
-    if response.status_code == 200:
-        games_data = response.json().get('games_data')
-        if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-          html = render_to_string('fragments/match_history_fragment.html', {'games_data': games_data, 'user_id': user_id, 'username': username}, request=request)
-          return JsonResponse({'html': html, 'status': 'success'})
-        return render(request, 'partials/match_history.html', {'games_data': games_data, 'user_id': user_id, 'username': username})
-    else:
-        return JsonResponse({'status': 'error', 'message': 'Error retrieving match history'})
     
 @login_required
 def view_user_profile(request, user_id):

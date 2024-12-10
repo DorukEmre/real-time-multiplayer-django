@@ -9,9 +9,6 @@ urlpatterns = [
   path('api/createTournament/', views.api_createTournament, name='createTournament'),
   path('api/updateTournament/', views.api_updateTournament, name='updateTournament'),
 
-  path('api/getGames/<str:user_id>/', views.api_getUserGames, name='getGames'),
-  path('api/getMatchMaking/<str:user_id>/', views.api_getMatchMaking, name='getMatchMaking'),
-  
   # Get winrate of a user for a given game type
   path('api/getWinrate/<str:user_id>/<str:game_type>/', views.api_getWinrate, name='getWinrate'),
 

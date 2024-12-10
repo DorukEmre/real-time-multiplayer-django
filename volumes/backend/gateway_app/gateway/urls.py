@@ -32,7 +32,6 @@ urlpatterns = [
 
     # profile api
     path('profile/', viewsProfile.get_profile, name='profile'),
-    path('profile/match_history/<str:username>/', viewsProfile.get_match_history, name='match_history'),
     path('userprofile/<int:user_id>/', viewsProfile.view_user_profile, name='user_profile'),
 
     path('edit_profile/', viewsProfile.get_edit_profile, name='edit_profile'),
