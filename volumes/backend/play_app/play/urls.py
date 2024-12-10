@@ -1,5 +1,5 @@
 from django.urls import path
-from . import views, viewsBlockchain
+from . import views
 
 urlpatterns = [
   # Save single game

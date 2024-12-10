@@ -5,8 +5,6 @@ from django.db import DatabaseError
 from django.forms.models import model_to_dict
 from asgiref.sync import sync_to_async
 from .models import Game, Tournament
-from .viewsBlockchain import save_tournament_results_in_blockchain, create_tournament_in_blockchain
-from django.utils.translation import gettext as _
 
 logger = logging.getLogger(__name__)
 import prettyprinter
@@ -191,10 +189,8 @@ def api_updateTournament(request):
                   'tournament': model_to_dict(tournament),
                   'game_round': game_round
               }
-              # Save the results in the blockchain
-              blockchain_response = json.loads(save_tournament_results_in_blockchain(tournament, game_winner_name))
-              message = blockchain_response.get('message')
-              # message = ("tournament ended")
+              message = ("tournament ended")
+              
             logger.debug(f'api_updateTournament > {game_round}: {message}')
             logger.debug(f'api_updateTournament > info: {info}')
 

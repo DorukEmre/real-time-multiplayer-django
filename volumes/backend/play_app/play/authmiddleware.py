@@ -1,9 +1,8 @@
-import os, logging, jwt
+import  logging, jwt
 from jwt.exceptions import ExpiredSignatureError, InvalidTokenError
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from datetime import datetime, timedelta, timezone
-from django.http import JsonResponse
 from functools import wraps
 from django.shortcuts import render
 

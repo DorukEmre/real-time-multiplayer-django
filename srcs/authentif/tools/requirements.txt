@@ -4,7 +4,6 @@ psycopg2-binary==2.9.9
 # For HTTP requests to other microservice APIs
 requests==2.32.3 
 # ASGI server for WebSockets
-# daphne==4.1.2
 uvicorn[standard]
 # Channels for WebSockets
 channels==4.1.0

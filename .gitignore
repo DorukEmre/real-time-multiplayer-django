@@ -24,29 +24,9 @@ venv/
 .DS_Store
 Thumbs.db
 
-# Node
-node_modules/
-volumes/backend/blockchain_app/node_modules/
-
 # Ignore static files collected by collectstatic
 volumes/frontend/
 
 *.pem
-
-# Ignore Benjamin sh*ts
-*Mbappe*
-*Palmer*
-*bellingham*
-*benja*
-*Filli*
-*Mimi*
-*niko*
-*pepe*
-*neymar_avatar*
-
-# Blockchain module
-volumes/backend/blockchain_app/node_modules/*
-volumes/backend/blockchain_app/artifacts/*
-
 
 user_data.json

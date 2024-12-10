@@ -4,21 +4,21 @@ function deleteCookie(name) {
 }
 
 async function updateUserID() {
-    try {
-      const response = await fetch('/api/getUserID/', { credentials: 'include' });
-      const data = await response.json();
-      if (data.user_id) {
-        g_user_id = data.user_id;
-        console.log('Updated global user ID:', g_user_id);
-      } else {
-        console.error('Failed to retrieve user ID');
-        g_user_id = null;
-      }
-    } catch (error) {
-      console.error('Error fetching user ID:', error);
+  try {
+    const response = await fetch('/api/getUserID/', { credentials: 'include' });
+    const data = await response.json();
+    if (data.user_id) {
+      g_user_id = data.user_id;
+      console.log('Updated global user ID:', g_user_id);
+    } else {
+      console.error('Failed to retrieve user ID');
       g_user_id = null;
     }
+  } catch (error) {
+    console.error('Error fetching user ID:', error);
+    g_user_id = null;
   }
+}
 
 async function handleRefresh(type) {
   console.warn('handleRefresh called by:\n', new Error().stack.split('\n')[2].trim());
@@ -64,9 +64,9 @@ async function handleRefresh(type) {
           g_user_id = 0;
         }
         else {
-            console.log(data.user_id)
-            g_user_id = data.user_id;
-            console.log(g_user_id)
+          console.log(data.user_id)
+          g_user_id = data.user_id;
+          console.log(g_user_id)
         }
       }
     })
@@ -148,10 +148,10 @@ async function handleRefresh(type) {
     console.warn('handleRefresh > updating notifications');
     await fetchTranslations();
     if (mainRoomSocket && mainRoomSocket.readyState != WebSocket.OPEN) {
-        connectMainRoomSocket();
+      connectMainRoomSocket();
     }
     if (mainRoomSocket && mainRoomSocket.readyState === WebSocket.OPEN) {
-        reloadNotificationsIfNeeded();
+      reloadNotificationsIfNeeded();
     }
   }
 }
@@ -355,12 +355,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   setInterval(async () => {
     try {
       const newToken = await refreshToken();
-      console.log("Token refreshed");
+      // console.log("Token refreshed");
     } catch (error) {
-      console.error("Failed to refresh token:", error);
+      // console.error("Failed to refresh token:", error);
       // Handle token refresh failure (e.g., redirect to login)
     }
-  }, 20 * 1000); // 20 seconds
+  }, 20 * 10000); // 200 seconds
 });
 
 async function refreshToken() {

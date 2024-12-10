@@ -1,12 +1,7 @@
-import os, json, requests, logging
+import logging
 from django.http import JsonResponse
-from django.conf import settings
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
-
-#from web3 import Web3
-# from .blockchain import connect_to_blockchain
-# from .utils import getUserId, getUserData
 from django.contrib.auth import get_user_model
 from .viewsProfile import get_profileapi_variables
 from django.utils.translation import gettext as _

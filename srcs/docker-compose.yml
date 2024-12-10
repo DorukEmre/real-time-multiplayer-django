@@ -49,9 +49,7 @@ services:
       - calcgame
       - profileapi
       - play
-    # command: daphne -e ssl:8443:/certs/key.pem:/certs/cert.pem gateway.asgi:application
     command: uvicorn gateway.asgi:application --host 0.0.0.0 --port 8443 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
-    # command: gunicorn gateway.asgi:application -w 4 -k uvicorn.workers.UvicornWorker -b 0.0.0.0:8443 --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem # to handle multiple connections
     # restart: unless-stopped
 
   authentif:
@@ -77,7 +75,6 @@ services:
       - logs:/usr/src/app/logs
     depends_on:
       - postgres
-    # command: daphne -e ssl:9001:/certs/key.pem:/certs/cert.pem authentif.asgi:application
     command: uvicorn authentif.asgi:application --host 0.0.0.0 --port 9001 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
     #   restart: unless-stopped
 
@@ -105,7 +102,6 @@ services:
     depends_on:
       - postgres
       - authentif
-    # command: daphne -e ssl:9002:/certs/key.pem:/certs/cert.pem profileapi.asgi:application
     command: uvicorn profileapi.asgi:application --host 0.0.0.0 --port 9002 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
 
   play:
@@ -131,7 +127,6 @@ services:
       - logs:/usr/src/app/logs
     depends_on:
       - postgres
-    # command: daphne -e ssl:9003:/certs/key.pem:/certs/cert.pem play.asgi:application
     command: uvicorn play.asgi:application --host 0.0.0.0 --port 9003 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
 
   calcgame:
@@ -158,32 +153,7 @@ services:
     depends_on:
       - postgres
       - authentif
-    # command: daphne -e ssl:9004:/certs/key.pem:/certs/cert.pem calcgame.asgi:application
     command: uvicorn calcgame.asgi:application --host 0.0.0.0 --port 9004 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
-
-  blockchain:
-    build:
-      context: ./blockchain
-      dockerfile: Dockerfile
-      args:
-        SERVICE_NAME: blockchain
-    image: blockchain
-    container_name: blockchain
-    env_file:
-      - .env
-    expose:
-      - 8545
-    networks:
-      - transcendence
-    volumes:
-      - backend:/usr/src/app
-      - frontend:/usr/src/frontend
-      - certs:/certs
-    depends_on:
-      - postgres
-      - authentif
-    # command: daphne -e ssl:8545:/certs/key.pem:/certs/cert.pem blockchain.asgi:application
-    command: uvicorn blockchain.asgi:application --host 0.0.0.0 --port 8545 --reload --ssl-keyfile=/certs/key.pem --ssl-certfile=/certs/cert.pem
 
   postgres:
     image: postgres:16.4-alpine3.20
@@ -202,103 +172,6 @@ services:
     networks:
       - transcendence
     restart: unless-stopped
-
-  # elasticsearch:
-  #   stdin_open: true
-  #   tty: true
-  #   build:
-  #     context: ./elasticsearch
-  #     dockerfile: Dockerfile
-  #     args:
-  #       ELKF_VERSION: ${ELKF_VERSION:-7.17.0}
-  #   container_name: elasticsearch
-  #   environment:
-  #     - discovery.type=single-node
-  #     - cluster.name=docker-cluster
-  #     - node.name=node-1
-  #     - bootstrap.memory_lock=true
-  #     - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-  #     - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
-  #     - LOGSTASH_PASSWORD=${LOGSTASH_PASSWORD}
-  #     - KIBANA_PASSWORD=${KIBANA_PASSWORD}
-  #   volumes:
-  #     - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-  #     - certs:/usr/share/elasticsearch/config/certs
-  #   ports:
-  #     - "9200:9200"
-  #   networks:
-  #     - transcendence
-  #   depends_on:
-  #     - gateway
-  #   env_file:
-  #     - .env
-
-  # logstash:
-  #   build:
-  #     context: ./logstash
-  #     dockerfile: Dockerfile
-  #     args:
-  #       ELKF_VERSION: ${ELKF_VERSION:-7.17.0}
-  #   container_name: logstash
-  #   volumes:
-  #     - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-  #     - ./logstash/logstash.yml:/usr/share/logstash/config/logstash.yml
-  #     - certs:/usr/share/logstash/config/certs
-  #   ports:
-  #     - "5000:5000"
-  #     - "9600:9600"  # For Filebeat to send logs
-  #     - "5044:5044"  # For Logstash to receive logs
-  #   depends_on:
-  #     - elasticsearch
-  #   environment:
-  #     - LOGSTASH_PASSWORD=${LOGSTASH_PASSWORD}
-  #   networks:
-  #     - transcendence
-  #   env_file:
-  #     - .env
-  #   restart: unless-stopped
-
-  # kibana:
-  #   build:
-  #     context: ./kibana
-  #     dockerfile: Dockerfile
-  #     args:
-  #       ELKF_VERSION: ${ELKF_VERSION:-7.17.0}
-  #   container_name: kibana
-  #   ports:
-  #     - "5601:5601"
-  #   depends_on:
-  #     - elasticsearch
-  #   environment:
-  #     - KIBANA_PASSWORD=${KIBANA_PASSWORD}
-  #     - ELASTICSEARCH_PASSWORD=${ELASTICSEARCH_PASSWORD}
-  #   networks:
-  #     - transcendence
-  #   volumes:
-  #     - ./kibana/kibana.yml:/usr/share/kibana/config/kibana.yml
-  #     - certs:/certs
-  #   env_file:
-  #     - .env
-  #   restart: unless-stopped
-
-  # filebeat:
-  #   build:
-  #     context: ./filebeat
-  #     dockerfile: Dockerfile
-  #     args:
-  #       ELKF_VERSION: ${ELKF_VERSION:-7.17.0}
-  #   container_name: filebeat
-  #   volumes:
-  #     - ./filebeat/filebeat.yml:/usr/share/filebeat/filebeat.yml
-  #     - logs:/usr/share/filebeat/logs
-  #     - certs:/certs
-  #   depends_on:
-  #     - logstash
-  #   networks:
-  #     - transcendence
-  #   env_file:
-  #     - .env
-  #   restart: unless-stopped
 
 
 volumes:
